@@ -31,8 +31,12 @@ public class MyArrayList implements Iterable {
         
     }
 
-    public String get(int index) {
-        return arr[index];
+    public String get(int index) throws IndexOutOfBoundsException {
+        if (index < size) {
+            return arr[index];
+        }else {
+            throw new IndexOutOfBoundsException("End of list.");
+        }
     }
 
     public int indexOf(String element) {
@@ -56,11 +60,10 @@ public class MyArrayList implements Iterable {
         if (index < size) {
             tempElement = arr[index];
             System.arraycopy(arr, index + 1, arr, index, size - 1 - index);
+            size--;
         } else {
             throw new IndexOutOfBoundsException("End of list.");
         }
-
-        size--;
 
         return tempElement; 
     }
@@ -87,7 +90,7 @@ public class MyArrayList implements Iterable {
             }
 
             @Override
-            public String next() throws IndexOutOfBoundsException {
+            public String next() {
                 String result = arr[current];
                 if (!hasNext()) {
                     throw new IndexOutOfBoundsException("End of list.");
