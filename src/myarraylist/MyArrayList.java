@@ -2,9 +2,8 @@ package myarraylist;
 
 import java.util.Iterator;
 
-public class MyArrayList implements Iterable<String>{
+public class MyArrayList implements Iterable {
 
-    private int length;
     private int size;
     private String arr[];
 
@@ -13,21 +12,23 @@ public class MyArrayList implements Iterable<String>{
     }
 
     public MyArrayList(int length) {
-        this.length = length;
         this.size = 0;
         this.arr = new String[length];
     }
 
     public boolean add(String element) {
-        if (size >= length) {
-            length += length + length / 2 + 1;
-            String tempArr[] = new String[length];
+        
+        if (size >= arr.length) {
+
+            String tempArr[] = new String[arr.length + arr.length / 2 + 1];
             System.arraycopy(arr, 0, tempArr, 0, size);
             arr = tempArr;
+
         }
 
         arr[size++] = element;
         return true;
+        
     }
 
     public String get(int index) {
@@ -35,34 +36,37 @@ public class MyArrayList implements Iterable<String>{
     }
 
     public int indexOf(String element) {
-        for(int i = 0; i < size; i++){
-            if(arr[i].equals(element)){
+        
+        for (int i = 0; i < size; i++) {
+            
+            if (arr[i].equals(element)) {
                 return i;
             }
+            
         }
+        
         return -1;
+        
     }
 
     public String remove(int index) throws IndexOutOfBoundsException {
-        
+
         String tempElement = null;
-        
-        if(index < size){  
+
+        if (index < size) {
             tempElement = arr[index];
-            for(int i = index; i < size - 1; i++) {
-                arr[i] = arr[i + 1];
-            }
+            System.arraycopy(arr, index + 1, arr, index, size - 1 - index);
         } else {
             throw new IndexOutOfBoundsException("End of list.");
         }
-        
-        size--;       
-        
-        return tempElement;
+
+        size--;
+
+        return tempElement; 
     }
 
-    public String set(int index, String element){
-        if(index < size){
+    public String set(int index, String element) {
+        if (index < size) {
             String tempStr = arr[index];
             arr[index] = element;
             return tempStr;
@@ -70,11 +74,11 @@ public class MyArrayList implements Iterable<String>{
             throw new IndexOutOfBoundsException("End of list.");
         }
     }
-    
+
     @Override
-    public Iterator<String> iterator() {
-        return new Iterator<String>() {
-            
+    public Iterator iterator() {
+        return new Iterator() {
+
             private int current = 0;
 
             @Override
@@ -85,7 +89,9 @@ public class MyArrayList implements Iterable<String>{
             @Override
             public String next() throws IndexOutOfBoundsException {
                 String result = arr[current];
-                if (!hasNext()) throw new IndexOutOfBoundsException("End of list.");
+                if (!hasNext()) {
+                    throw new IndexOutOfBoundsException("End of list.");
+                }
                 current++;
                 return result;
             }
