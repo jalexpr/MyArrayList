@@ -1,9 +1,8 @@
-package testmycollections;
+package old.testmylist;
 
-import mycollections.MyList;
-import mycollections.MyList;
+import mycollections.list.MyList;
 
-public class TestMyCollections {
+public abstract class TestMyList {
 
     public static void add_3elements(MyList list) throws Exception {
 
@@ -28,8 +27,10 @@ public class TestMyCollections {
         list.add(1, "Hello word #13");
         list.add(2, "Hello word #14");
 
-        if (size == list.size()) {
-            throw new Exception();
+        size += 3;
+        
+        if (size != list.size()) {
+            throw new Exception("Test 'Add 3 elements by index' fail");
         }
 
         System.out.println("Test 'Add 3 elements by index' successful");
@@ -43,7 +44,7 @@ public class TestMyCollections {
         list1.addAll(list2);
 
         if (size1 != list1.size() || size2 != list2.size()) {
-            throw new Exception();
+            throw new Exception("Test 'addAll add list2 in list1' fail");
         }
 
         System.out.println("Test 'addAll add list2 in list1' successful");
@@ -53,12 +54,12 @@ public class TestMyCollections {
     
         int size2 = list2.size();
         int index = size2 / 2; 
-        int size1 = list1.size() + size2 - index;
+        int size1 = list1.size() + size2;
 
         list1.addAll(index, list2);
 
         if (size1 != list1.size() || size2 != list2.size()) {
-            throw new Exception();
+            throw new Exception("Test 'addAll_addList2InList1WithIndex' fail");
         }
 
         System.out.println("Test 'addAll add list2 in list1 with index' successful");
@@ -75,7 +76,7 @@ public class TestMyCollections {
             throw new Exception();
         }
 
-        System.out.println("Test 'get Object by Index' successful");
+        System.out.println("Test 'get_getObject' fail");
     }
 
     public static void findFirst_getFirstObject(MyList list) throws Exception {
@@ -85,7 +86,7 @@ public class TestMyCollections {
         list.add(0, obj);
 
         if (!obj.equals(list.get(0))) {
-            throw new Exception();
+            throw new Exception("Test 'findFirst_getFirstObject' fail");
         }
 
         System.out.println("Test 'find first get first object' successful");
@@ -99,7 +100,7 @@ public class TestMyCollections {
         list.add(indexEnd, obj);
 
         if (!obj.equals(list.get(indexEnd))) {
-            throw new Exception();
+            throw new Exception("Test 'findLast_getLastObject' fail");
         }
 
         System.out.println("Test 'find last get last object' successful");
@@ -108,12 +109,12 @@ public class TestMyCollections {
     public static void indexOf_getIndexOf(MyList list) throws Exception {
 
         Object obj = new Object();
-        int indexEnd = list.size() / 2;
+        int indexEnd = list.size() / 2 - 1;
 
         list.add(indexEnd, obj);
 
         if (list.indexOf(obj) != indexEnd) {
-            throw new Exception();
+            throw new Exception("Test 'indexOf_getIndexOf' fail");
         }
 
         System.out.println("Test 'get Index Of ' successful");
@@ -127,7 +128,7 @@ public class TestMyCollections {
         list.set(indexEnd, obj);
 
         if (!list.get(indexEnd).equals(obj)) {
-            throw new Exception();
+            throw new Exception("Test 'set_setObjectByIndex' fail");
         }
 
         System.out.println("Test 'set Object by index' successful");
@@ -141,7 +142,7 @@ public class TestMyCollections {
         list.set(index, obj);
 
         if (!list.get(index).equals(obj)) {
-            throw new Exception();
+            throw new Exception("Test 'remove_removeObjectByIndex' fail");
         }
 
         System.out.println("Test 'remove object by index' successful");
@@ -154,6 +155,6 @@ public class TestMyCollections {
                 return;
             }
         }
-        throw new Exception();
+        throw new Exception("Test 'removeAll' fail.\n size = " + list.size());
     }
 }
