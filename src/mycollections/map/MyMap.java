@@ -21,9 +21,11 @@ public interface MyMap {
 
     public void clear();
 
-//    public Set keySet();
-//
-//    public Collection values();
-//
-//    public Set entrySet();
+    //public Set keySet();
+
+    //public Collection values();
+
+    //public Set entrySet();
+    
+    //public boolean equals(MyMap o);
 }
