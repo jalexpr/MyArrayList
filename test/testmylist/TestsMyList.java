@@ -24,6 +24,9 @@ public abstract class TestsMyList {
             remove_removeElement(myList.getEmptyMyList());
             remove_removeElementByIndex(myList.getEmptyMyList());
             removeAll_removeOtherCollection_similarElementsRemoved(myList.getEmptyMyList(), myList.getEmptyMyList());
+            indexOf_indexOfByNull_getIndex0(myList.getEmptyMyList());
+            indexOf_indexOfByNull_getIndex2(myList.getEmptyMyList());
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -339,5 +342,44 @@ public abstract class TestsMyList {
         positionCheck(testList, referenceArray);
 
         System.out.println("Test 'removeAll_removeOtherCollection_similarElementsRemoved' successful!");
+    }
+    
+    public static void indexOf_indexOfByNull_getIndex0(MyList testList) throws Exception {
+        
+        indexOf_indexOfByNull_getIndex(testList, 0);        
+        System.out.println("Test 'indexOf_indexOfByNull_getIndex0' successful!");
+    }
+    
+    public static void indexOf_indexOfByNull_getIndex2(MyList testList) throws Exception {
+        
+        indexOf_indexOfByNull_getIndex(testList, 2);        
+        System.out.println("Test 'indexOf_indexOfByNull_getIndex2' successful!");
+    }
+    
+    public static void indexOf_indexOfByNull_getIndex(MyList testList, int index) throws Exception {
+        
+        int amountElements = index + 3;
+        Object[] referenceArray = new Object[amountElements];
+
+        for (int i = 0; i < amountElements; i++) {
+            if(index == i) {
+                String testElement = null;
+                testList.add(i, testElement);
+                referenceArray[i] = testElement;
+            } else {
+                String testElement = "Test" + i;
+                testList.add(i, testElement);
+                referenceArray[i] = testElement;
+            }
+        }
+        
+        int getIndex = testList.indexOf(null);
+                
+        if(getIndex != index) {
+            exceptionGeneration("Не верно полученый индекс!", getIndex, 0);
+        }        
+        
+        sizeCheck(testList, referenceArray);
+        positionCheck(testList, referenceArray);
     }
 }
