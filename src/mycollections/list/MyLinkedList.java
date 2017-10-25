@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class MyLinkedList implements MyList {
 
-    private Node header;
+    private final Node header;
     private int size;
 
     public MyLinkedList() {
@@ -59,10 +59,12 @@ public class MyLinkedList implements MyList {
     }
 
     private Node searchNode(int index) throws ArrayIndexOutOfBoundsException {
-
+        
+        isIndexValid(index);
+        
         Node node = header;
 
-        if (index < (size / 2)) {
+        if (index < (size >> 1)) {
             for (int i = 0; i <= index; i++) {
                 node = node.next;
             }
@@ -111,8 +113,14 @@ public class MyLinkedList implements MyList {
         int indexNode = 0;
 
         for (Object elementNode : this) {
-            if (elementNode.equals(element) && indexNode < size) {
-                return indexNode;
+            if(elementNode == null) {
+                if (element == null) {
+                    return indexNode;
+                }
+            }   else {
+                if (elementNode.equals(element) && indexNode < size) {
+                    return indexNode;
+                }
             }
             indexNode++;
         }
