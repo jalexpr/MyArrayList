@@ -22,4 +22,5 @@ public interface MyMap {
     public void clear();
     
     public MyMap getEmptyMyMap();
+    
 }
