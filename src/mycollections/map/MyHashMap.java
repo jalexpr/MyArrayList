@@ -1,10 +1,9 @@
 package mycollections.map;
 
-import java.sql.Time;
-import java.util.Date;
-
 public class MyHashMap implements MyMap {
 
+    private static int TABLELENGTHDEFAULT = 16;
+    private static float LOADFACTORDEFAULT = 0.75f;
     private int tableLength;
     private float loadFactor;
     private Node[] table;
@@ -12,11 +11,11 @@ public class MyHashMap implements MyMap {
     private int size;
 
     public MyHashMap() {
-        this(16);
+        this(TABLELENGTHDEFAULT);
     }
 
     public MyHashMap(int tableLength) {
-        this(tableLength, 0.75f);
+        this(tableLength, LOADFACTORDEFAULT);
     }
 
     public MyHashMap(int tableLength, float loadFactor) {
@@ -87,22 +86,50 @@ public class MyHashMap implements MyMap {
 
     private Object addNodeInCell(int index, Node node) {
 
-        Node cellNode = table[index];
+        Node firstNodeInCell = table[index];
 
-        if (cellNode == null) {
-            table[index] = node;
+        if (firstNodeInCell == null || node.equalsByIdentifier(firstNodeInCell)) {
+            return replaceFirstNodeInCell(index, node);
+        } else {
+            return insertNodeBehindNode(firstNodeInCell, node);
+        }
+    }
+
+    private Object replaceFirstNodeInCell(int index, Node node) {
+        
+        Node firstNodeInCell = table[index];
+        table[index] = node;
+        size++;
+        
+        if(firstNodeInCell == null) {
             return null;
         } else {
-            do {
-                if (cellNode.equalsByIndicators(node)) {
-                    table[index] = node;
-                    return cellNode.value;
-                }
-            } while (cellNode.hasNext());
-
-            cellNode.next = node;
-            return node.value;
+            node.next = firstNodeInCell.next;
+            return firstNodeInCell.value;
         }
+    }
+    
+    private Object insertNodeBehindNode(Node cellNode, Node newNode) {
+        while (cellNode.hasNext()) {
+            cellNode = cellNode.next;
+            if (cellNode.equalsByIdentifier(newNode)) {
+                return replaceValueInNode(cellNode, newNode);
+            }
+        }
+        
+        return addNodeLast(cellNode, newNode);
+    }
+    
+    private Object replaceValueInNode(Node oldNode, Node newNode) {
+        Object oldValue = newNode.value;
+        oldNode.value = newNode.value;
+        return oldValue;
+    }
+    
+    private Object addNodeLast(Node lastNode, Node newNode) {
+        lastNode.next = newNode;
+        size++;
+        return null;
     }
 
     public Object putForNullKey(Object value) {
@@ -121,56 +148,145 @@ public class MyHashMap implements MyMap {
 
     @Override
     public boolean containsKey(Object key) {
-        try{
-            Node cellNode = table[indexFor(hashKey(key))];
-            return searchNodeInCallByKey(cellNode, key) != null;
+            
+        try {
+            return searchNodeByKey(key) != null;
         } catch (Exception e) {
             return false;
         }
     }
-
-    private Node searchNodeInCallByKey(Node cellNode, Object key) throws Exception{
+    
+    private Node searchNodeByKey(Object key) throws Exception {
+        int indexInTable = searchIndexInTable(key);
         
-        if (cellNode != null) {
-            int keyHash = hashKey(key);
-            do {
-                if (cellNode.equalsByIdentifier(key, keyHash)){
-                    return cellNode;
-                }
-            } while (cellNode.hasNext());
+        return searchNodeInCallByKey(table[indexInTable], key);
+    }
+    
+    private int searchIndexInTable(Object key) {
+        if(key == null) {
+            return 0;
+        } else {
+            return indexFor(hashKey(key));
         }
-        throw new Exception("Ошибка поиска по ключу!");
+    }
+    
+    private Node searchNodeInCallByKey(Node cellNode, Object key) throws Exception {
+        return searchByKeyInCell(cellNode, key);
     }
 
-    public static int hashKey(Object h) {
-        return h.hashCode() + 1;
+    private Node searchByKeyInCell(Node cellNode, Object key) throws Exception {
+        if (cellNode != null) {
+            if (cellNode.equalsByIdentifier(key)) {
+                return cellNode;
+            } else {
+                if (cellNode.hasNext()){
+                    return searchByKeyInCell(cellNode.next, key);
+                }
+            }
+        }
+        throw new Exception("Значение по ключу не найдено!");
     }
 
     @Override
     public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(Node cellNode : table) {
+            if(containsValueInCell(cellNode, value)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean containsValueInCell(Node cellNode, Object value) {
+        try{
+            return searchNodeByValueInCell(cellNode, value) != null;
+        } catch (Exception Ex) {
+            return false;
+        }
+    }
+    
+    private Node searchNodeByValueInCell(Node cellNode, Object value) throws Exception {
+        if(cellNode != null) {
+            if (cellNode.value.equals(value)){
+                return cellNode;
+            } else {
+                return searchNodeByValueInCell(cellNode.next, value);
+            }
+        } 
+       throw new Exception();
+    }
+    
+    @Override
+    public Object get(Object key) {
+        try {
+            return searchNodeByKey(key).value;
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     @Override
-    public Object get(Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object remove(Object key) {
+        int indexInTable = searchIndexInTable(key);
+        Node cellNode = table[indexInTable];
+        
+        if(cellNode == null) {
+            return null;
+        } else {
+            if(cellNode.equalsByIdentifier(key)){
+                table[indexInTable] = null;
+                return cellNode.value;
+            } else {
+                try{
+                    Node nodePrev = searchPrevNodeByKeyInCell(cellNode, key);
+                    Node nodeRemove = nodePrev.next;
+                    nodePrev.next = nodeRemove.next;
+                    return nodeRemove.value;
+                } catch (Exception ex) {
+                    return null;
+                }
+            }
+        }
     }
-
-    @Override
-    public Object remove(Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    private Node searchPrevNodeByKeyInCell(Node prevNode, Object key) throws Exception {
+        
+        if (prevNode != null  && prevNode.next != null) {
+            if (prevNode.next.equalsByIdentifier(key)) {
+                return prevNode;
+            } else {
+                if (prevNode.next.hasNext()){
+                    return searchPrevNodeByKeyInCell(prevNode.next, key);
+                }
+            }
+        }
+        throw new Exception("Значение по ключу не найдено!");
     }
-
+    
     @Override
     public void putAll(MyMap map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        addAllTable(((MyHashMap) map).table);
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        table = new Node[tableLength];
+        size--;
     }
-
+    
+    @Override
+    public MyMap getEmptyMyMap() {
+        return new MyHashMap();
+    }
+        
+    public static int hashKey(Object key) {
+        if(key == null) {
+            return -1;
+        } else {
+            return key.hashCode();
+        }
+    }
+    
     private class Node {
 
         int hash;
@@ -195,12 +311,12 @@ public class MyHashMap implements MyMap {
             return next != null;
         }
 
-        public boolean equalsByIndicators(Node node) {
-            return node.hash == hash && (node.key == key || key.equals(node.key));
+        public boolean equalsByIdentifier(Node otherNode) {
+            return otherNode.hash == hash && (otherNode.key == key || key.equals(otherNode.key));
         }
         
-        public boolean equalsByIdentifier(Object otherKey, int hashKey) {
-            return hashKey == hash && (otherKey == key || key.equals(otherKey));
+        public boolean equalsByIdentifier(Object otherKey) {
+            return hashKey(otherKey) == hash && (otherKey == key || key.equals(otherKey));
         }
     }
 }
