@@ -271,7 +271,7 @@ public class MyHashMap implements MyMap {
     @Override
     public void clear() {
         table = new Node[tableLength];
-        size--;
+        size = 0;
     }
     
     @Override
