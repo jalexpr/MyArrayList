@@ -2,7 +2,7 @@ package mycollections.map;
 
 public class MyHashMap implements MyMap {
 
-    private static int TABLELENGTHDEFAULT = 16;
+    private static int TABLELENGTHDEFAULT = 2;
     private static float LOADFACTORDEFAULT = 0.75f;
     private int tableLength;
     private float loadFactor;
@@ -58,7 +58,8 @@ public class MyHashMap implements MyMap {
         threshold = newThreshold();
 
         Node[] oldTable = table;
-        this.table = new Node[threshold];
+        this.table = new Node[tableLength];
+        size = 0;
 
         addAllTable(oldTable);
     }
@@ -163,11 +164,7 @@ public class MyHashMap implements MyMap {
     }
     
     private int searchIndexInTable(Object key) {
-        if(key == null) {
-            return 0;
-        } else {
-            return indexFor(hashKey(key));
-        }
+        return indexFor(hashKey(key));
     }
     
     private Node searchNodeInCallByKey(Node cellNode, Object key) throws Exception {
@@ -281,7 +278,7 @@ public class MyHashMap implements MyMap {
         
     public static int hashKey(Object key) {
         if(key == null) {
-            return -1;
+            return 0;
         } else {
             return key.hashCode();
         }
@@ -312,11 +309,11 @@ public class MyHashMap implements MyMap {
         }
 
         public boolean equalsByIdentifier(Node otherNode) {
-            return otherNode.hash == hash && (otherNode.key == key || key.equals(otherNode.key));
+            return otherNode.hash == hash && (otherNode.key == key || key != null && key.equals(otherNode.key));
         }
         
         public boolean equalsByIdentifier(Object otherKey) {
-            return hashKey(otherKey) == hash && (otherKey == key || key.equals(otherKey));
+            return hashKey(otherKey) == hash && (otherKey == key || key != null && key.equals(otherKey));
         }
     }
 }
