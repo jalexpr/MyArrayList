@@ -1,16 +1,10 @@
 package mycollections.map;
 
-<<<<<<< HEAD
 import java.util.Iterator;
 
 public class MyHashMap implements MyMap {
 
     private static int TABLELENGTHDEFAULT = 16;
-=======
-public class MyHashMap implements MyMap {
-
-    private static int TABLELENGTHDEFAULT = 2;
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
     private static float LOADFACTORDEFAULT = 0.75f;
     private int tableLength;
     private float loadFactor;
@@ -66,8 +60,7 @@ public class MyHashMap implements MyMap {
         threshold = newThreshold();
 
         Node[] oldTable = table;
-        this.table = new Node[tableLength];
-        size = 0;
+        this.table = new Node[threshold];
 
         addAllTable(oldTable);
     }
@@ -157,7 +150,6 @@ public class MyHashMap implements MyMap {
 
     @Override
     public boolean containsKey(Object key) {
-<<<<<<< HEAD
             int indexTable;
             
             if(key == null) {
@@ -168,34 +160,13 @@ public class MyHashMap implements MyMap {
             
         try {
             return searchNodeInCallByKey(table[indexTable], key) != null;
-=======
-            
-        try {
-            return searchNodeByKey(key) != null;
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
         } catch (Exception e) {
             return false;
         }
     }
-<<<<<<< HEAD
 
     private Node searchNodeInCallByKey(Node cellNode, Object key) throws Exception {
             return searchByKeyInCell(cellNode, key);
-=======
-    
-    private Node searchNodeByKey(Object key) throws Exception {
-        int indexInTable = searchIndexInTable(key);
-        
-        return searchNodeInCallByKey(table[indexInTable], key);
-    }
-    
-    private int searchIndexInTable(Object key) {
-        return indexFor(hashKey(key));
-    }
-    
-    private Node searchNodeInCallByKey(Node cellNode, Object key) throws Exception {
-        return searchByKeyInCell(cellNode, key);
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
     }
 
     private Node searchByKeyInCell(Node cellNode, Object key) throws Exception {
@@ -209,7 +180,6 @@ public class MyHashMap implements MyMap {
             }
         }
         throw new Exception("Значение по ключу не найдено!");
-<<<<<<< HEAD
     }
     
     public static int hashKey(Object key) {
@@ -218,23 +188,16 @@ public class MyHashMap implements MyMap {
         } else {
             return key.hashCode();
         }
-=======
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
     }
 
     @Override
     public boolean containsValue(Object value) {
         for(Node cellNode : table) {
-<<<<<<< HEAD
             if(searchByValueInCell(cellNode, value)){
-=======
-            if(containsValueInCell(cellNode, value)){
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
                 return true;
             }
         }
         return false;
-<<<<<<< HEAD
     }
     
     private boolean searchByValueInCell(Node cellNode, Object value) {
@@ -246,84 +209,25 @@ public class MyHashMap implements MyMap {
             }
         } 
         return false;
-=======
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
-    }
-    
-    private boolean containsValueInCell(Node cellNode, Object value) {
-        try{
-            return searchNodeByValueInCell(cellNode, value) != null;
-        } catch (Exception Ex) {
-            return false;
-        }
-    }
-    
-    private Node searchNodeByValueInCell(Node cellNode, Object value) throws Exception {
-        if(cellNode != null) {
-            if (cellNode.value.equals(value)){
-                return cellNode;
-            } else {
-                return searchNodeByValueInCell(cellNode.next, value);
-            }
-        } 
-       throw new Exception();
-    }
-    
-    @Override
-    public Object get(Object key) {
-        try {
-            return searchNodeByKey(key).value;
-        } catch (Exception ex) {
-            return null;
-        }
     }
 
     @Override
-    public Object remove(Object key) {
-        int indexInTable = searchIndexInTable(key);
-        Node cellNode = table[indexInTable];
-        
-        if(cellNode == null) {
-            return null;
-        } else {
-            if(cellNode.equalsByIdentifier(key)){
-                table[indexInTable] = null;
-                return cellNode.value;
-            } else {
-                try{
-                    Node nodePrev = searchPrevNodeByKeyInCell(cellNode, key);
-                    Node nodeRemove = nodePrev.next;
-                    nodePrev.next = nodeRemove.next;
-                    return nodeRemove.value;
-                } catch (Exception ex) {
-                    return null;
-                }
-            }
-        }
+    public Object get(Object value) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    private Node searchPrevNodeByKeyInCell(Node prevNode, Object key) throws Exception {
-        
-        if (prevNode != null  && prevNode.next != null) {
-            if (prevNode.next.equalsByIdentifier(key)) {
-                return prevNode;
-            } else {
-                if (prevNode.next.hasNext()){
-                    return searchPrevNodeByKeyInCell(prevNode.next, key);
-                }
-            }
-        }
-        throw new Exception("Значение по ключу не найдено!");
+
+    @Override
+    public Object remove(Object value) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void putAll(MyMap map) {
-        addAllTable(((MyHashMap) map).table);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void clear() {
-<<<<<<< HEAD
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -349,27 +253,11 @@ public class MyHashMap implements MyMap {
             }
         };
     }
-=======
-        table = new Node[tableLength];
-        size = 0;
-    }
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
     
     @Override
     public MyMap getEmptyMyMap() {
         return new MyHashMap();
     }
-<<<<<<< HEAD
-=======
-        
-    public static int hashKey(Object key) {
-        if(key == null) {
-            return 0;
-        } else {
-            return key.hashCode();
-        }
-    }
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
     
     private class Node {
 
@@ -396,19 +284,11 @@ public class MyHashMap implements MyMap {
         }
 
         public boolean equalsByIdentifier(Node otherNode) {
-<<<<<<< HEAD
             return otherNode.hash == hash && (otherNode.key == key || key.equals(otherNode.key));
         }
         
         public boolean equalsByIdentifier(Object otherKey) {
             return hashKey(otherKey) == hash && (otherKey == key || key.equals(otherKey));
-=======
-            return otherNode.hash == hash && (otherNode.key == key || key != null && key.equals(otherNode.key));
-        }
-        
-        public boolean equalsByIdentifier(Object otherKey) {
-            return hashKey(otherKey) == hash && (otherKey == key || key != null && key.equals(otherKey));
->>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
         }
     }
 }
