@@ -1,4 +1,4 @@
-package old.testmylist;
+package oldtestmylist;
 
 import mycollections.list.MyArrayList;
 

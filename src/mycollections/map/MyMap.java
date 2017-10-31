@@ -1,7 +1,7 @@
 
 package mycollections.map;
 
-public interface MyMap {
+public interface MyMap extends Iterable{
     
     public int size();
 
@@ -21,6 +21,12 @@ public interface MyMap {
 
     public void clear();
     
+<<<<<<< HEAD
+    //public boolean equals(MyMap o);
+    
+    public MyMap getEmptyMyMap();
+=======
     public MyMap getEmptyMyMap();
     
+>>>>>>> 4e25cc0c57ca0d27c33dbefe44255a45cb799437
 }
